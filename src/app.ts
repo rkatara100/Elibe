@@ -1,11 +1,14 @@
 import express from "express";
-const app=express();
+import globalErrorHandler from "./middlewares/globalerrorHandler";
+const app = express();
 
+app.get('/', (req, res) => {
+  
+    res.json({message:"Something wentv wrong"});
 
-app.get('/',(req,res,next)=>{
-      res.json({hello:"235"});
-      next();
-})
+});
 
+// Explicitly declare it as an error-handling middleware
+app.use(globalErrorHandler);
 
 export default app;
