@@ -1,8 +1,7 @@
 import express from "express";
 const bookRouter=express.Router();
-// import {createUser,loginUser} from './bookController';
+import {createBook} from './bookController';
 
-bookRouter.post('/register',createBook);
-// userRouter.post('/login',loginUser);
+bookRouter.post('/create',createBook);
 
-export default userRouter;
+export default bookRouter;
