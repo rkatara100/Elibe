@@ -2,7 +2,7 @@ import  { NextFunction, Request, Response }  from "express";
 import createHttpError from "http-errors";
 import userModel from "./userModel";
 import bcrypt from 'bcrypt';
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 import { config } from "../config/config";
 import { User } from "./userTypes";
 
@@ -54,12 +54,39 @@ const createUser=async(req:Request,res:Response,next:NextFunction)=>{
 
           //response send krte hai
 
-          res.json({Acess_token:token});
+          res.status(201).json({Acess_token:token});
              }catch(err){
                   return next(createHttpError(500,'error while signing jwt token'));
              }
 };
 
+const loginUser=async(req:Request,res:Response,next:NextFunction)=>{
 
 
-export  {createUser};
+      const {email,password}=req.body;
+      if(!email ||!password){
+            return next(createHttpError(400,'All fields are required'));
+      }
+  
+
+        const user=await userModel.findOne({email});
+        if(!user){
+            return next(createHttpError(500,'User not found'));
+       }
+      
+       const isMatch=await bcrypt.compare(password,user.password);
+
+       if(!isMatch){
+            return next(createHttpError(400,'Email or password incorrect!'));
+       }
+
+      const token=sign({sub:user._id},config.jwtSecret as string,{expiresIn:"7d"});
+
+
+      res.json({Access_token:token}); 
+
+};
+
+
+
+export  {createUser,loginUser};
