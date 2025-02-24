@@ -1,7 +1,7 @@
 import express from "express";
 import globalErrorHandler from "./middlewares/globalerrorHandler";
 import userRouter from "./user/userRouter";
-import bookRouter from "./book/bookrouter";
+import bookRouter from "./book/bookRouter";
 const app = express();
 app.use(express.json());
 
